@@ -38,7 +38,9 @@ jobs:
 
   build-cross:
     runs-on: ubuntu-latest
-    container: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-0.0.7
+    container:
+      image: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-0.0.7
+      options: --user root
     needs: build-native
     strategy:
       matrix:
