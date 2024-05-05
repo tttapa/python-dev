@@ -43,17 +43,17 @@ jobs:
       matrix:
         full-python-version:
           - '3.7.17'
-          - '3.8.19'
-          - '3.9.19'
-          - '3.10.14'
-          - '3.11.9'
+        #   - '3.8.19'
+        #   - '3.9.19'
+        #   - '3.10.14'
+        #   - '3.11.9'
           - '3.12.3'
         host-triple:
           - 'aarch64-rpi3-linux-gnu'
           - 'armv6-rpi-linux-gnueabihf'
-          - 'armv7-neon-linux-gnueabihf'
-          - 'armv8-rpi3-linux-gnueabihf'
-          - 'x86_64-centos7-linux-gnu'
+        #   - 'armv7-neon-linux-gnueabihf'
+        #   - 'armv8-rpi3-linux-gnueabihf'
+        #   - 'x86_64-centos7-linux-gnu'
           - 'x86_64-bionic-linux-gnu'
     name: Cross Python (${{ matrix.full-python-version }}, ${{ matrix.host-triple }})
 
