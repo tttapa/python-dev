@@ -84,3 +84,62 @@ jobs:
         if: ${{ github.event.action == 'released' || github.event.action == 'prereleased' }}
         with:
           files: ${{ matrix.host-triple }}-python-${{ matrix.full-python-version }}.tar.gz
+
+  package:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-0.0.7
+      options: --user root
+    needs: build-cross
+    strategy:
+      matrix:
+        host-triple:
+          - 'aarch64-rpi3-linux-gnu'
+          - 'armv6-rpi-linux-gnueabihf'
+          - 'armv7-neon-linux-gnueabihf'
+          - 'armv8-rpi3-linux-gnueabihf'
+          - 'x86_64-centos7-linux-gnu'
+          - 'x86_64-bionic-linux-gnu'
+    name: Package (${{ matrix.host-triple }})
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: chmod +w /home/develop/opt/x-tools/${{ matrix.host-triple }}
+      # Download and extract all compiled versions of Python
+      - uses: actions/download-artifact@v4
+        with:
+            name: ${{ matrix.host-triple }}-python-3.7.17
+      - run: set -ex; v=3.7.17; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf ${{ matrix.host-triple }}-python-$v.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
+      - uses: actions/download-artifact@v4
+        with:
+            name: ${{ matrix.host-triple }}-python-3.8.19
+      - run: set -ex; v=3.8.19; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf ${{ matrix.host-triple }}-python-$v.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
+      - uses: actions/download-artifact@v4
+        with:
+            name: ${{ matrix.host-triple }}-python-3.9.19
+      - run: set -ex; v=3.9.19; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf ${{ matrix.host-triple }}-python-$v.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
+      - uses: actions/download-artifact@v4
+        with:
+            name: ${{ matrix.host-triple }}-python-3.10.14
+      - run: set -ex; v=3.10.14; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf ${{ matrix.host-triple }}-python-$v.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
+      - uses: actions/download-artifact@v4
+        with:
+            name: ${{ matrix.host-triple }}-python-3.11.9
+      - run: set -ex; v=3.11.9; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf ${{ matrix.host-triple }}-python-$v.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
+      - uses: actions/download-artifact@v4
+        with:
+            name: ${{ matrix.host-triple }}-python-3.12.3
+      - run: set -ex; v=3.12.3; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf ${{ matrix.host-triple }}-python-$v.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
+      - run: set -ex; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; ln -s "python3.12" "$dest/python3"; ln -s "python3" "$dest/python"
+      # Export toolchain
+      - run: chmod -R -w /home/develop/opt
+      - run: tar cJf x-tools-python-${{ matrix.host-triple }}.tar.xz -C /home/develop/opt x-tools
+      - uses: actions/upload-artifact@v4
+        with:
+          name: x-tools-python-${{ matrix.host-triple }}
+          path: x-tools-python-${{ matrix.host-triple }}.tar.xz
+      - name: Release
+        uses: softprops/action-gh-release@17cd0d34deddf848fc0e7d9be5202c148c270a0a
+        if: ${{ github.event.action == 'released' || github.event.action == 'prereleased' }}
+        with:
+          files: x-tools-python-${{ matrix.host-triple }}.tar.xz
