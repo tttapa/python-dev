@@ -37,7 +37,7 @@ jobs:
           path: native-python-${{ matrix.full-python-version }}.tar.gz
 
   build-cross:
-    runs-on: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-master
+    runs-on: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-0.0.7
     needs: build-native
     strategy:
       matrix:
@@ -65,6 +65,7 @@ jobs:
           path: native-python-${{ matrix.full-python-version }}.tar.gz
       - run: tar xf native-python-${{ matrix.full-python-version }}.tar.gz
       - run: echo "$PWD/native-python-${{ matrix.full-python-version }}/usr/local/bin" >> $GITHUB_PATH
+      - run: echo "/home/develop/opt/x-tools/${{ matrix.host-triple }}/bin" >> $GITHUB_PATH
       - id: cache-cross-python
         uses: actions/cache@v4
         with:
