@@ -1,0 +1,83 @@
+name: 'Build'
+
+on:
+  workflow_dispatch:
+  push:
+    tags-ignore: ['**']
+    branches: ['**']
+  release:
+    types: ['released', 'prereleased']
+
+jobs:
+  build-native:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        full-python-version:
+          - '3.7.17'
+          - '3.8.19'
+          - '3.9.19'
+          - '3.10.14'
+          - '3.11.9'
+          - '3.12.3'
+    name: Native Python (${{ matrix.full-python-version }})
+
+    steps:
+      - uses: actions/checkout@v4
+      - id: cache-native-python
+        uses: actions/cache@v4
+        with:
+          path: native-python-${{ matrix.full-python-version }}.tar.gz
+          key: native-python-${{ runner.os }}-${{ matrix.full-python-version }}-${{ hashFiles('build-python-native.sh') }}
+      - if: steps.cache-native-python.outputs.cache-hit != 'true'
+        run: ./build-python-native.sh ${{ matrix.full-python-version }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-python-${{ matrix.full-python-version }}
+          path: native-python-${{ matrix.full-python-version }}.tar.gz
+
+  build-cross:
+    runs-on: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-master
+    needs: build-native
+    strategy:
+      matrix:
+        full-python-version:
+          - '3.7.17'
+          - '3.8.19'
+          - '3.9.19'
+          - '3.10.14'
+          - '3.11.9'
+          - '3.12.3'
+        host-triple:
+          - 'aarch64-rpi3-linux-gnu'
+          - 'armv6-rpi-linux-gnueabihf'
+          - 'armv7-neon-linux-gnueabihf'
+          - 'armv8-rpi3-linux-gnueabihf'
+          - 'x86_64-centos7-linux-gnu'
+          - 'x86_64-bionic-linux-gnu'
+    name: Cross Python (${{ matrix.full-python-version }}, ${{ matrix.host-triple }})
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-python-${{ matrix.full-python-version }}
+          path: native-python-${{ matrix.full-python-version }}.tar.gz
+      - run: tar xf native-python-${{ matrix.full-python-version }}.tar.gz
+      - run: echo "$PWD/native-python-${{ matrix.full-python-version }}/usr/local/bin" >> $GITHUB_PATH
+      - id: cache-cross-python
+        uses: actions/cache@v4
+        with:
+          path: cross-python-${{ matrix.full-python-version }}.tar.gz
+          key: cross-python-${{ runner.os }}-${{ matrix.full-python-version }}-${{ matrix.host-triple }}-${{ hashFiles('build-python-native.sh','build-python-cross.sh','config.site') }}
+      - if: steps.cache-cross-python.outputs.cache-hit != 'true'
+        run: ./build-python-cross.sh ${{ matrix.full-python-version }} ${{ matrix.host-triple }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.host-triple }}-python-${{ matrix.full-python-version }}
+          path: ${{ matrix.host-triple }}-python-${{ matrix.full-python-version }}.tar.gz
+      - name: Release
+        uses: softprops/action-gh-release@17cd0d34deddf848fc0e7d9be5202c148c270a0a
+        if: ${{ github.event.action == 'released' || github.event.action == 'prereleased' }}
+        with:
+          files: ${{ matrix.host-triple }}-python-${{ matrix.full-python-version }}.tar.gz
