@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-native:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         full-python-version:
@@ -37,23 +37,24 @@ jobs:
           path: native-python-${{ matrix.full-python-version }}.tar.gz
 
   build-cross:
-    runs-on: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-0.0.7
+    runs-on: ubuntu-latest
+    container: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-0.0.7
     needs: build-native
     strategy:
       matrix:
         full-python-version:
           - '3.7.17'
-        #   - '3.8.19'
-        #   - '3.9.19'
-        #   - '3.10.14'
-        #   - '3.11.9'
+          - '3.8.19'
+          - '3.9.19'
+          - '3.10.14'
+          - '3.11.9'
           - '3.12.3'
         host-triple:
           - 'aarch64-rpi3-linux-gnu'
           - 'armv6-rpi-linux-gnueabihf'
-        #   - 'armv7-neon-linux-gnueabihf'
-        #   - 'armv8-rpi3-linux-gnueabihf'
-        #   - 'x86_64-centos7-linux-gnu'
+          - 'armv7-neon-linux-gnueabihf'
+          - 'armv8-rpi3-linux-gnueabihf'
+          - 'x86_64-centos7-linux-gnu'
           - 'x86_64-bionic-linux-gnu'
     name: Cross Python (${{ matrix.full-python-version }}, ${{ matrix.host-triple }})
 
