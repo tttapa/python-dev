@@ -31,8 +31,7 @@ which $HOST_TRIPLE-pkg-config
 # Build zlib
 wget "$zlib_url/v$zlib_version/$zlib.tar.gz" -O- | tar xz
 pushd "$zlib"
-CC="$HOST_TRIPLE-gcc" \
-LD="$HOST_TRIPLE-ld" \
+CHOST="$HOST_TRIPLE" \
 ./configure \
     --prefix="$zlib_staging_dir/usr/local"
 make
