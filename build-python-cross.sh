@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -ex
-SCRIPT_DIR="$( dirname "${BASH_SOURCE[0]}" )"
+SCRIPT_DIR="$(realpath "$( dirname "${BASH_SOURCE[0]}" )" )"
 
 PYTHON_VERSION=${1}
 HOST_TRIPLE=${2}
@@ -17,7 +17,7 @@ staging_dir="$PWD"
 zlib_url="https://github.com/madler/zlib/releases/download/"
 zlib_version="1.3"
 zlib="zlib-$zlib_version"
-zlib_staging_dir="$staging/$zlib"
+zlib_staging_dir="$staging_dir/$zlib"
 
 mkdir -p build
 pushd build
@@ -33,9 +33,9 @@ wget "$zlib_url/v$zlib_version/$zlib.tar.gz" -O- | tar xz
 pushd "$zlib"
 CHOST="$HOST_TRIPLE" \
 ./configure \
-    --prefix="$zlib_staging_dir/usr/local"
+    --prefix="/usr/local"
 make
-make install
+make install DESTDIR="$zlib_staging_dir"
 popd
 
 # Build Python
