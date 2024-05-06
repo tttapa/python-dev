@@ -131,6 +131,13 @@ jobs:
             name: ${{ matrix.host-triple }}-python-3.12.3
       - run: set -ex; v=3.12.3; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf ${{ matrix.host-triple }}-python-$v.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
       - run: set -ex; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; ln -s "python3.12" "$dest/python3"; ln -s "python3" "$dest/python"
+      # Generate toolchain files and py-build-cmake config
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-python-3.12.3
+      - run: tar xf native-python-3.12.3.tar.gz
+      - run: echo "$PWD/native-python-3.12.3/usr/local/bin" >> $GITHUB_PATH
+      - run: python3.12 gen-py-build-cmake-cross-config.py ${{ matrix.host-triple }} /home/develop/opt/x-tools
       # Export toolchain
       - run: chmod -R -w /home/develop/opt
       - run: tar cJf x-tools-python-${{ matrix.host-triple }}.tar.xz -C /home/develop/opt x-tools
