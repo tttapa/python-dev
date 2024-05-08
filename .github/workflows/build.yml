@@ -20,6 +20,7 @@ jobs:
           - '3.10.14'
           - '3.11.9'
           - '3.12.3'
+          - '3.13.0b1'
     name: Native Python (${{ matrix.full-python-version }})
 
     steps:
@@ -51,6 +52,7 @@ jobs:
           - '3.10.14'
           - '3.11.9'
           - '3.12.3'
+          - '3.13.0b1'
         host-triple:
           - 'aarch64-rpi3-linux-gnu'
           - 'armv6-rpi-linux-gnueabihf'
@@ -130,6 +132,10 @@ jobs:
         with:
             name: ${{ matrix.host-triple }}-python-3.12.3
       - run: set -ex; v=3.12.3; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf ${{ matrix.host-triple }}-python-$v.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
+      - uses: actions/download-artifact@v4
+        with:
+            name: ${{ matrix.host-triple }}-python-3.13.0b1
+      - run: set -ex; v=3.13.0b1; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf ${{ matrix.host-triple }}-python-$v.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
       - run: set -ex; dest="/home/develop/opt/x-tools/${{ matrix.host-triple }}"; ln -s "python3.12" "$dest/python3"; ln -s "python3" "$dest/python"
       # Generate toolchain files and py-build-cmake config
       - uses: actions/download-artifact@v4
