@@ -163,13 +163,13 @@ jobs:
           chmod +w "/home/develop/opt/x-tools/${{ matrix.host-triple }}"
           cp -a "/home/develop/python-dev/x-tools/${{ matrix.host-triple }}" /home/develop/opt/x-tools
           chmod -R -w /home/develop/opt
-      - run: tar cJf x-tools-python-${{ matrix.host-triple }}.tar.xz -C /home/develop/opt x-tools
+      - run: tar cJf python-dev-${{ matrix.host-triple }}-with-toolchain.tar.xz -C /home/develop/opt x-tools
       - uses: actions/upload-artifact@v4
         with:
-          name: x-tools-python-${{ matrix.host-triple }}
-          path: x-tools-python-${{ matrix.host-triple }}.tar.xz
+          name: python-dev-${{ matrix.host-triple }}-with-toolchain
+          path: python-dev-${{ matrix.host-triple }}-with-toolchain.tar.xz
       - name: Release x-tools-python
         uses: softprops/action-gh-release@17cd0d34deddf848fc0e7d9be5202c148c270a0a
         if: ${{ github.event.action == 'released' || github.event.action == 'prereleased' }}
         with:
-          files: x-tools-python-${{ matrix.host-triple }}.tar.xz
+          files: python-dev-${{ matrix.host-triple }}-with-toolchain.tar.xz
