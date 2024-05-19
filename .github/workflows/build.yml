@@ -60,6 +60,8 @@ jobs:
           - 'armv8-rpi3-linux-gnueabihf'
           - 'x86_64-centos7-linux-gnu'
           - 'x86_64-bionic-linux-gnu'
+    permissions:
+      contents: write
     name: Cross Python (${{ matrix.full-python-version }}, ${{ matrix.host-triple }})
 
     steps:
@@ -102,6 +104,8 @@ jobs:
           - 'armv8-rpi3-linux-gnueabihf'
           - 'x86_64-centos7-linux-gnu'
           - 'x86_64-bionic-linux-gnu'
+    permissions:
+      contents: write
     name: Package (${{ matrix.host-triple }})
 
     steps:
