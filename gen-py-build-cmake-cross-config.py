@@ -3,7 +3,7 @@ from pathlib import Path
 from platform_config import PlatformConfig, python_arch
 
 
-python_versions = [f"3.{v}" for v in range(7, 13)]
+python_versions = [f"3.{v}" for v in range(7, 14)]
 
 toolchain_contents = """\
 include("${{CMAKE_CURRENT_LIST_DIR}}/{triple}.toolchain.cmake")
