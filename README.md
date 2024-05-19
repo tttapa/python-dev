@@ -16,6 +16,6 @@ binaries embedding the Python interpreter.
 
 The ready-to-use tarballs can be downloaded from the [Releases page](https://github.com/tttapa/toolchains/releases).
 
-- `{triplet}-python-{version}.tar.gz`: One single Python version for one specific platform.
+- `python-dev-{version}-{triplet}.tar.gz`: One single Python version for one specific platform.
 - `python-dev-{triplet}.tar.xz`: All available Python versions for one specific platform.
 - `python-dev-{triplet}-with-toolchain.tar.xz`: All available Python versions for one specific platform, including a GCC 13.2 cross-compilation toolchain.

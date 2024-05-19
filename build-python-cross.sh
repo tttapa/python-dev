@@ -83,7 +83,7 @@ popd
 popd
 
 # Package Python
-tar czf $HOST_TRIPLE-python-$PYTHON_VERSION.tar.gz -C "$staging_dir" "$staging"
+tar czf python-dev-$PYTHON_VERSION-$HOST_TRIPLE.tar.gz -C "$staging_dir" "$staging"
 
 # Note about --with-openssl=no-i-do-not-want-openssl:
 # The configure script does not accept the --without-openssl or
