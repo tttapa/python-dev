@@ -37,6 +37,8 @@ abi = '{abi}'
 arch = '{arch}'
 toolchain_file = '{triple}.{python}.toolchain.cmake'
 
+[cmake]
+build_path = ".py-build-cmake_cache/{{build_config}}-{triple}"
 [cmake.options]
 TOOLCHAIN_PYTHON_VERSION = '{version}'
 """
