@@ -15,7 +15,7 @@ binaries embedding the Python interpreter.
 
 ## Download
 
-The ready-to-use tarballs can be downloaded from the [Releases page](https://github.com/tttapa/toolchains/releases).
+The ready-to-use tarballs can be downloaded from the [Releases page](https://github.com/tttapa/python-dev/releases).
 
 - `python-dev-{version}-{triplet}.tar.gz`: One single Python version for one specific platform.
 - `python-dev-{triplet}.tar.xz`: All available Python versions for one specific platform.
