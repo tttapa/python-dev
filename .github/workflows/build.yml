@@ -147,6 +147,7 @@ jobs:
       - run: tar xf native-python-3.12.3.tar.gz
       - run: echo "$PWD/native-python-3.12.3/usr/local/bin" >> $GITHUB_PATH
       - run: python3.12 gen-py-build-cmake-cross-config.py ${{ matrix.host-triple }} /home/develop/python-dev/x-tools
+      - run: chmod -R -w /home/develop/python-dev/x-tools
       # Export python-dev
       - run: tar cJf python-dev-${{ matrix.host-triple }}.tar.xz -C /home/develop/python-dev x-tools
       - uses: actions/upload-artifact@v4
