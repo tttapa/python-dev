@@ -40,7 +40,7 @@ jobs:
   build-cross:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-gcc13-0.1.0
+      image: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-gcc13-0.1.1
       options: --user root
     needs: build-native
     strategy:
@@ -92,7 +92,7 @@ jobs:
   package:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-gcc13-0.1.0
+      image: ghcr.io/tttapa/toolchains:${{ matrix.host-triple }}-gcc13-0.1.1
       options: --user root
     needs: build-cross
     strategy:
