@@ -140,6 +140,15 @@ jobs:
             name: python-dev-3.13.0b1-${{ matrix.host-triple }}
       - run: set -ex; v=3.13.0b1; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf python-dev-$v-${{ matrix.host-triple }}.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
       - run: set -ex; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; ln -s "python3.12" "$dest/python3"; ln -s "python3" "$dest/python"
+      # Download and prepare PyPy
+      - run: |
+          set -ex
+          dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"
+          mkdir -p "$dest"
+          cd "$dest"
+          for v in 3.10-v7.3.16 3.9-v7.3.16 3.8-v7.3.11 3.7-v7.3.9; do
+            "$GITHUB_WORKSPACE/download-pypy.sh" $v ${{ matrix.host-triple }}
+          done
       # Generate toolchain files and py-build-cmake config
       - uses: actions/download-artifact@v4
         with:
@@ -147,7 +156,9 @@ jobs:
       - run: tar xf native-python-3.12.3.tar.gz
       - run: echo "$PWD/native-python-3.12.3/usr/local/bin" >> $GITHUB_PATH
       - run: python3.12 gen-py-build-cmake-cross-config.py ${{ matrix.host-triple }} /home/develop/python-dev/x-tools
-      - run: chmod -R -w /home/develop/python-dev/x-tools
+      - run: |
+          chown -R 1000:1000 /home/develop/python-dev/x-tools
+          chmod -R a-w /home/develop/python-dev/x-tools
       # Export python-dev
       - run: tar cJf python-dev-${{ matrix.host-triple }}.tar.xz -C /home/develop/python-dev x-tools
       - uses: actions/upload-artifact@v4
@@ -161,9 +172,9 @@ jobs:
           files: python-dev-${{ matrix.host-triple }}.tar.xz
       # Export toolchain + python-dev
       - run: |
-          chmod +w "/home/develop/opt/x-tools/${{ matrix.host-triple }}"
+          chmod u+w "/home/develop/opt/x-tools/${{ matrix.host-triple }}"
           cp -a "/home/develop/python-dev/x-tools/${{ matrix.host-triple }}" /home/develop/opt/x-tools
-          chmod -R -w /home/develop/opt
+          chmod -R a-w /home/develop/opt
       - run: tar cJf python-dev-${{ matrix.host-triple }}-with-toolchain.tar.xz -C /home/develop/opt x-tools
       - uses: actions/upload-artifact@v4
         with:

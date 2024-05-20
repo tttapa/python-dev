@@ -11,7 +11,7 @@ python="Python-$PYTHON_VERSION"
 version_num=$(echo "$PYTHON_VERSION" | grep -Po '^\d+\.\d+\.\d+')
 version_majmin=$(echo "$PYTHON_VERSION" | grep -Po '^\d+\.\d+')
 version_suf="${PYTHON_VERSION#"$version_num"}"
-staging="$HOST_TRIPLE-python-$PYTHON_VERSION"
+staging="python-dev-$PYTHON_VERSION-$HOST_TRIPLE"
 staging_dir="$PWD"
 
 zlib_url="https://github.com/madler/zlib/releases/download/"
