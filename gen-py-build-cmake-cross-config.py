@@ -43,10 +43,24 @@ build_path = ".py-build-cmake_cache/{{build_config}}-{triple}"
 TOOLCHAIN_PYTHON_VERSION = '{version}'
 """
 
+conan_profile_contents = """\
+include({{{{ os.path.join(profile_dir, "{triple}.profile.conan") }}}})
+[conf]
+tools.cmake.cmaketoolchain:user_toolchain=["{{{{ os.path.join(profile_dir, "{triple}.{python}.toolchain.cmake") }}}}"]
+"""
+
 
 def get_toolchain_file(cfg: PlatformConfig):
     subs = {"triple": str(cfg)}
     return toolchain_contents.format(**subs)
+
+
+def get_conan_profile(python: str, cfg: PlatformConfig):
+    subs = {
+        "triple": str(cfg),
+        "python": python,
+    }
+    return conan_profile_contents.format(**subs)
 
 
 def get_pbc_cross_config(version: str, cfg: PlatformConfig):
@@ -92,19 +106,23 @@ if __name__ == "__main__":
     ):
         f.write(get_toolchain_file(cfg))
         f.write(s.read())
+    with open(outdir / f"{cfg}.python.profile.conan", "w") as f:
+        f.write(get_conan_profile("python", cfg))
     for version in python_versions:
         fname = f"{cfg}.python{version}.py-build-cmake.cross.toml"
         with open(outdir / fname, "w") as f:
             f.write(get_pbc_cross_config(version, cfg))
     pypy_supported = triple.startswith(("aarch64-", "x86_64-"))
     if pypy_supported:
-        for version, pypy_version in pypy_versions.items():
-            fname = f"{cfg}.pypy{version}-v{pypy_version}.py-build-cmake.cross.toml"
-            with open(outdir / fname, "w") as f:
-                f.write(get_pbc_cross_config_pypy(version, pypy_version, cfg))
         with (
             open(outdir / f"{cfg}.pypy.toolchain.cmake", "w") as f,
             open(script_dir / "pypy.toolchain.cmake", "r") as s,
         ):
             f.write(get_toolchain_file(cfg))
             f.write(s.read())
+        with open(outdir / f"{cfg}.pypy.profile.conan", "w") as f:
+            f.write(get_conan_profile("pypy", cfg))
+        for version, pypy_version in pypy_versions.items():
+            fname = f"{cfg}.pypy{version}-v{pypy_version}.py-build-cmake.cross.toml"
+            with open(outdir / fname, "w") as f:
+                f.write(get_pbc_cross_config_pypy(version, pypy_version, cfg))
