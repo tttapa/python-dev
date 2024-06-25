@@ -19,8 +19,8 @@ jobs:
           - '3.9.19'
           - '3.10.14'
           - '3.11.9'
-          - '3.12.3'
-          - '3.13.0b1'
+          - '3.12.4'
+          - '3.13.0b2'
     name: Native Python (${{ matrix.full-python-version }})
 
     steps:
@@ -51,8 +51,8 @@ jobs:
           - '3.9.19'
           - '3.10.14'
           - '3.11.9'
-          - '3.12.3'
-          - '3.13.0b1'
+          - '3.12.4'
+          - '3.13.0b2'
         host-triple:
           - 'aarch64-rpi3-linux-gnu'
           - 'armv6-rpi-linux-gnueabihf'
@@ -133,12 +133,12 @@ jobs:
       - run: set -ex; v=3.11.9; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf python-dev-$v-${{ matrix.host-triple }}.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
       - uses: actions/download-artifact@v4
         with:
-            name: python-dev-3.12.3-${{ matrix.host-triple }}
-      - run: set -ex; v=3.12.3; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf python-dev-$v-${{ matrix.host-triple }}.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
+            name: python-dev-3.12.4-${{ matrix.host-triple }}
+      - run: set -ex; v=3.12.4; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf python-dev-$v-${{ matrix.host-triple }}.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
       - uses: actions/download-artifact@v4
         with:
-            name: python-dev-3.13.0b1-${{ matrix.host-triple }}
-      - run: set -ex; v=3.13.0b1; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf python-dev-$v-${{ matrix.host-triple }}.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
+            name: python-dev-3.13.0b2-${{ matrix.host-triple }}
+      - run: set -ex; v=3.13.0b2; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf python-dev-$v-${{ matrix.host-triple }}.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
       - run: set -ex; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; ln -s "python3.12" "$dest/python3"; ln -s "python3" "$dest/python"
       # Download and prepare PyPy
       - run: |
@@ -152,9 +152,9 @@ jobs:
       # Generate toolchain files and py-build-cmake config
       - uses: actions/download-artifact@v4
         with:
-          name: native-python-3.12.3
-      - run: tar xf native-python-3.12.3.tar.gz
-      - run: echo "$PWD/native-python-3.12.3/usr/local/bin" >> $GITHUB_PATH
+          name: native-python-3.12.4
+      - run: tar xf native-python-3.12.4.tar.gz
+      - run: echo "$PWD/native-python-3.12.4/usr/local/bin" >> $GITHUB_PATH
       - run: python3.12 gen-py-build-cmake-cross-config.py ${{ matrix.host-triple }} /home/develop/python-dev/x-tools
       - run: |
           chown -R 1000:1000 /home/develop/python-dev/x-tools
