@@ -4,7 +4,7 @@ endif()
 
 # User options
 set(TOOLCHAIN_PYTHON_VERSION "3.10" CACHE STRING "Python version to locate")
-set(TOOLCHAIN_PYPY_VERSION "7.3.16" CACHE STRING "PyPy version to locate")
+set(TOOLCHAIN_PYPY_VERSION "7.3.17" CACHE STRING "PyPy version to locate")
 option(TOOLCHAIN_NO_FIND_PYTHON "Do not set the FindPython hints" Off)
 option(TOOLCHAIN_NO_FIND_PYTHON3 "Do not set the FindPython3 hints" Off)
 
@@ -33,7 +33,7 @@ function(toolchain_locate_python)
     set(_TOOLCHAIN_PYTHON_INCLUDE_DIR "${_TOOLCHAIN_PYTHON_ROOT_DIR}/${inc_dir}")
     # Set the extension suffix
     if (NOT TOOLCHAIN_PYPY_VERSION MATCHES "^([0-9]+)\\.([0-9]+)(\\.[0-9]+)?$")
-        message(SEND_ERROR "Invalid PyPy version. \${TOOLCHAIN_PYPY_VERSION} should be major.minor or major.minor.patch (e.g. 7.3.16)")
+        message(SEND_ERROR "Invalid PyPy version. \${TOOLCHAIN_PYPY_VERSION} should be major.minor or major.minor.patch (e.g. 7.3.17)")
     endif()
     set(abi_version "${CMAKE_MATCH_1}${CMAKE_MATCH_2}")
     if (NOT TOOLCHAIN_PYTHON_VERSION MATCHES "^([0-9]+)\\.([0-9]+)$")
