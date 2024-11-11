@@ -172,8 +172,8 @@ jobs:
           files: python-dev-${{ matrix.host-triple }}.tar.xz
       # Export toolchain + python-dev
       - run: |
-          chmod u+w "/home/develop/opt/x-tools/${{ matrix.host-triple }}"
-          cp -a "/home/develop/python-dev/x-tools/${{ matrix.host-triple }}" /home/develop/opt/x-tools
+          chmod u+w /home/develop/opt/x-tools
+          cp -a /home/develop/python-dev/x-tools /home/develop/opt
           chmod -R a-w /home/develop/opt/x-tools/${{ matrix.host-triple }}
       - run: tar cJf python-dev-${{ matrix.host-triple }}-with-toolchain.tar.xz -C /home/develop/opt x-tools
       - uses: actions/upload-artifact@v4
