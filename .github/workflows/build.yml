@@ -60,6 +60,9 @@ jobs:
           - 'armv8-rpi3-linux-gnueabihf'
           - 'x86_64-centos7-linux-gnu'
           - 'x86_64-bionic-linux-gnu'
+        exclude:
+          - full-python-version: '3.13.0'
+            host-triple: 'armv6-rpi-linux-gnueabihf'
     permissions:
       contents: write
     name: Cross Python (${{ matrix.full-python-version }}, ${{ matrix.host-triple }})
@@ -136,9 +139,11 @@ jobs:
             name: python-dev-3.12.7-${{ matrix.host-triple }}
       - run: set -ex; v=3.12.7; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf python-dev-$v-${{ matrix.host-triple }}.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
       - uses: actions/download-artifact@v4
+        if: ${{ matrix.host-triple != 'armv6-rpi-linux-gnueabihf' }}
         with:
             name: python-dev-3.13.0-${{ matrix.host-triple }}
       - run: set -ex; v=3.13.0; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; mkdir -p "$dest/python$v"; tar xf python-dev-$v-${{ matrix.host-triple }}.tar.gz -C "$dest/python$v" --strip-components=1; ln -s "python$v" "$dest/python${v%.*}"
+        if: ${{ matrix.host-triple != 'armv6-rpi-linux-gnueabihf' }}
       - run: set -ex; dest="/home/develop/python-dev/x-tools/${{ matrix.host-triple }}"; ln -s "python3.12" "$dest/python3"; ln -s "python3" "$dest/python"
       # Download and prepare PyPy
       - run: |
