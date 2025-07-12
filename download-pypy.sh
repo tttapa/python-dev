@@ -2,7 +2,7 @@
 
 set -ex
 
-PYTHON_VERSION=${1:-3.10-v7.3.17}
+PYTHON_VERSION=${1:-3.11-v7.3.20}
 HOST_TRIPLE=${2:-x86_64-bionic-linux-gnu}
 
 pypy_url="https://downloads.python.org/pypy"
